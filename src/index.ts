@@ -194,29 +194,13 @@ export default {
 
 		// Handle Telegram Webhook
 		if (request.method === 'POST' && url.pathname === '/webhook') {
-			// Validate secret token from Telegram
-			const secretToken = request.headers.get('X-Telegram-Bot-Api-Secret-Token');
-
-			if (!secretToken || secretToken !== env.BOT_SECRET_TOKEN) {
-				console.warn('Unauthorized webhook request - invalid secret token');
-				return new Response('Unauthorized', { status: 401 });
-			}
-
 			try {
 				const bot = createBot(env);
-				const handleUpdate = webhookCallback(bot, 'cloudflare');
-
-				// For Cloudflare Workers, we need to handle the webhook callback differently
-				const response = new Promise<Response>((resolve) => {
-					handleUpdate({
-						request: request as any,
-						respondWith: (res: Promise<Response>) => {
-							res.then(resolve);
-						},
-					});
+				const handleUpdate = webhookCallback(bot, 'cloudflare-mod', {
+					secretToken: env.BOT_SECRET_TOKEN,
 				});
 
-				return await response;
+				return handleUpdate(request);
 			} catch (error) {
 				console.error('Webhook error:', error);
 				return new Response(JSON.stringify({ ok: true }), { status: 200 });
