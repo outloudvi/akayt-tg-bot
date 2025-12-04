@@ -2,14 +2,9 @@ import { Bot, webhookCallback } from 'grammy';
 import { Context } from 'grammy';
 import { Storage } from './storage';
 
-interface Env {
-	WORKER_URL: string;
-	BACKEND_BASE_URL: string;
-	TELEGRAM_BOT_TOKEN: string;
-	BOT_SECRET_TOKEN: string;
-	BACKEND_ADMIN_TOKEN: string;
-	ALLOWED_USER_IDS: string;
-}
+const EnvKeys = ['BACKEND_BASE_URL', 'TELEGRAM_BOT_TOKEN', 'BOT_SECRET_TOKEN', 'BACKEND_ADMIN_TOKEN', 'ALLOWED_USER_IDS'] as const;
+
+type Env = Record<(typeof EnvKeys)[number], string>;
 
 // Extended context type for better type safety
 type BotContext = Context & { env: Env };
@@ -94,7 +89,7 @@ function createBot(env: Env): Bot<BotContext> {
 
 			await storage.put(slug, targetUrl);
 
-			const shortUrl = `${ctx.env.WORKER_URL}/${slug}`;
+			const shortUrl = slug;
 			await ctx.reply(`✅ Short URL created!\n\nSlug: \`${slug}\`\nShort URL: \`${shortUrl}\`\nTarget: \`${targetUrl}\``, {
 				parse_mode: 'Markdown',
 			});
@@ -154,7 +149,7 @@ function createBot(env: Env): Bot<BotContext> {
 				return;
 			}
 
-			const shortUrl = `${ctx.env.WORKER_URL}/${slug}`;
+			const shortUrl = slug;
 			await ctx.reply(
 				`ℹ️ Information for \`${slug}\`:\n\n` + `Short URL: \`${shortUrl}\`\n` + `Target: \n${JSON.stringify(targetUrl, null, 2)}`,
 				{
@@ -189,6 +184,12 @@ function isValidUrl(url: string): boolean {
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+		for (const key of EnvKeys) {
+			if (!env[key]) {
+				return new Response(`Bad configurations: ${key} not found`, { status: 500 });
+			}
+		}
+
 		const url = new URL(request.url);
 
 		// Handle Telegram Webhook
