@@ -4,6 +4,7 @@ import { Storage } from './storage';
 
 interface Env {
 	TELEGRAM_BOT_TOKEN: string;
+	BOT_SECRET_TOKEN: string;
 	WORKER_URL: string;
 	BASE_URL: string;
 	ADMIN_TOKEN: string;
@@ -167,6 +168,14 @@ export default {
 
 		// Handle Telegram Webhook
 		if (request.method === 'POST' && url.pathname === '/webhook') {
+			// Validate secret token from Telegram
+			const secretToken = request.headers.get('X-Telegram-Bot-Api-Secret-Token');
+
+			if (!secretToken || secretToken !== env.BOT_SECRET_TOKEN) {
+				console.warn('Unauthorized webhook request - invalid secret token');
+				return new Response('Unauthorized', { status: 401 });
+			}
+
 			try {
 				const bot = createBot(env);
 				const handleUpdate = webhookCallback(bot, 'cloudflare');
@@ -186,9 +195,7 @@ export default {
 				console.error('Webhook error:', error);
 				return new Response(JSON.stringify({ ok: true }), { status: 200 });
 			}
-		}
-
-		// Handle other methods
+		} // Handle other methods
 		return new Response('Not Found', { status: 404 });
 	},
 } satisfies ExportedHandler<Env>;

@@ -30,9 +30,10 @@
 	 * https://developers.cloudflare.com/workers/configuration/secrets/
 	 * Set these with: wrangler secret put SECRET_NAME
 	 * - TELEGRAM_BOT_TOKEN: Your Telegram bot token from @BotFather
+	 * - BOT_SECRET_TOKEN: Secret token for validating Telegram requests (set when registering webhook)
 	 * - ADMIN_TOKEN: Authentication token for the link shortener API
 	 */
-	// "secrets": ["TELEGRAM_BOT_TOKEN", "ADMIN_TOKEN"]
+	// "secrets": ["TELEGRAM_BOT_TOKEN", "BOT_SECRET_TOKEN", "ADMIN_TOKEN"]
 	/**
 	 * Static Assets
 	 * https://developers.cloudflare.com/workers/static-assets/binding/
