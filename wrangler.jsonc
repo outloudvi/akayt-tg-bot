@@ -19,7 +19,8 @@
 	 */
 	"vars": {
 		"WORKER_URL": "https://akayt.librehs.workers.dev",
-		"BACKEND_BASE_URL": "https://uau-ng.librehs.workers.dev"
+		"BACKEND_BASE_URL": "https://uau-ng.librehs.workers.dev",
+		"ALLOWED_USER_IDS": "356430323"
 	},
 	/**
 	 * Secrets

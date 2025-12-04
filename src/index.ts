@@ -8,6 +8,7 @@ interface Env {
 	TELEGRAM_BOT_TOKEN: string;
 	BOT_SECRET_TOKEN: string;
 	BACKEND_ADMIN_TOKEN: string;
+	ALLOWED_USER_IDS: string;
 }
 
 // Extended context type for better type safety
@@ -21,6 +22,30 @@ function createBot(env: Env): Bot<BotContext> {
 	// Middleware to attach env to context
 	bot.use(async (ctx, next) => {
 		ctx.env = env;
+		await next();
+	});
+
+	// Middleware to check if user is allowed
+	bot.use(async (ctx, next) => {
+		// Only check for messages, not other updates
+		if (!ctx.message) {
+			await next();
+			return;
+		}
+
+		// Parse the allowed user IDs
+		const allowedIds = env.ALLOWED_USER_IDS.split(',')
+			.map((id) => id.trim())
+			.filter((id) => id.length > 0);
+
+		// Check if user is allowed
+		const userId = ctx.from?.id.toString();
+		if (!userId || !allowedIds.includes(userId)) {
+			console.warn(`Unauthorized access attempt from user ${userId}`);
+			await ctx.reply('❌ You are not authorized to use this bot.');
+			return;
+		}
+
 		await next();
 	});
 
