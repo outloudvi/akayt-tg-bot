@@ -4,16 +4,12 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "super-tree-51b3",
+	"name": "akayt-tg-bot",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-12-02",
 	"compatibility_flags": [
 		"global_fetch_strictly_public"
 	],
-	"assets": {
-		// The path to the directory containing the `index.html` file to be served at `/`
-		"directory": "./public"
-	},
 	"observability": {
 		"enabled": true
 	},
@@ -22,8 +18,8 @@
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
 	 */
 	"vars": {
-		"WORKER_URL": "https://your-worker-url.workers.dev",
-		"BASE_URL": "https://your-api-url.com"
+		"WORKER_URL": "https://akayt.librehs.workers.dev",
+		"BACKEND_BASE_URL": "https://uau-ng.librehs.workers.dev"
 	},
 	/**
 	 * Secrets

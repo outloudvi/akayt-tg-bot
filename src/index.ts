@@ -3,11 +3,11 @@ import { Context } from 'grammy';
 import { Storage } from './storage';
 
 interface Env {
+	WORKER_URL: string;
+	BACKEND_BASE_URL: string;
 	TELEGRAM_BOT_TOKEN: string;
 	BOT_SECRET_TOKEN: string;
-	WORKER_URL: string;
-	BASE_URL: string;
-	ADMIN_TOKEN: string;
+	BACKEND_ADMIN_TOKEN: string;
 }
 
 // Extended context type for better type safety
@@ -16,7 +16,7 @@ type BotContext = Context & { env: Env };
 // Initialize bot
 function createBot(env: Env): Bot<BotContext> {
 	const bot = new Bot<BotContext>(env.TELEGRAM_BOT_TOKEN);
-	const storage = new Storage(env.BASE_URL, env.ADMIN_TOKEN);
+	const storage = new Storage(env.BACKEND_BASE_URL, env.BACKEND_ADMIN_TOKEN);
 
 	// Middleware to attach env to context
 	bot.use(async (ctx, next) => {
