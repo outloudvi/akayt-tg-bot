@@ -37,7 +37,6 @@ function createBot(env: Env): Bot<BotContext> {
 		const userId = ctx.from?.id.toString();
 		if (!userId || !allowedIds.includes(userId)) {
 			console.warn(`Unauthorized access attempt from user ${userId}`);
-			await ctx.reply('❌ You are not authorized to use this bot.');
 			return;
 		}
 
