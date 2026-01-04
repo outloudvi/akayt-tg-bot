@@ -88,8 +88,7 @@ function createBot(env: Env): Bot<BotContext> {
 
 			await storage.put(slug, targetUrl);
 
-			const shortUrl = slug;
-			await ctx.reply(`✅ Short URL created!\n\nSlug: \`${slug}\`\nShort URL: \`${shortUrl}\`\nTarget: \`${targetUrl}\``, {
+			await ctx.reply(`✅ Short URL created!\n\nSlug: \`${slug}\`\nTarget: \`${targetUrl}\``, {
 				parse_mode: 'Markdown',
 			});
 		} catch (error) {
