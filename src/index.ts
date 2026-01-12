@@ -66,7 +66,8 @@ function createBot(env: Env): Bot<BotContext> {
 			return;
 		}
 
-		const [slug, targetUrl] = args;
+		const slug = args[0];
+		const targetUrl = args.slice(1).join(' ');
 
 		// Basic URL validation
 		if (!isValidUrl(targetUrl)) {
